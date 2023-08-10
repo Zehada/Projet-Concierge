@@ -1,5 +1,6 @@
 <?php
 require('classes/Task.php');
+require('functions.php');
 ?>
 
 
@@ -34,6 +35,8 @@ require('classes/Task.php');
     </form>
 
     <?php
+
+
     if (isset($_GET['add-task'])) {
         $newTask = new Task($_GET['task-done'], $_GET['task-date'], $_GET['task-floor']);
         $newTask->addTask();
@@ -41,6 +44,37 @@ require('classes/Task.php');
     ?>
 
 
+    <div class="d-flex flex-wrap m-5">
+
+        <?php
+        $displayTasks = getTasks();
+
+        foreach ($displayTasks as $task) {
+
+            echo '<div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">' . $task['date_intervention'] . '</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Étage ' . $task['etage_intervention'] . '</h6>
+                        <p class="card-text">' . $task['nom_intervention'] . '</p>
+                        <form>
+                            <button class="btn btn-primary" type="submit" name="supprimer' . $task['id_intervention'] . '">Supprimer</button>
+                        </form>
+                    </div>
+                </div>';
+
+
+            if (isset($_GET['supprimer' . $task['id_intervention']])) {
+                $query = "DELETE FROM interventions WHERE id_intervention = :id_intervention";
+                $taskDelete = connectToDatabase()->prepare($query);
+                $taskDelete->execute([
+                    'id_intervention' => $task['id_intervention'],
+                ]);
+                echo "<script>window.location='index.php'</script>";
+            }
+        }
+        ?>
+
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
 </body>

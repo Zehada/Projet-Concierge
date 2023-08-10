@@ -1,8 +1,7 @@
 <?php
-require('Database.php');
 
 
-class Task extends Database
+class Task
 {
     private $taskName;
     private $taskDate;
@@ -18,7 +17,7 @@ class Task extends Database
     public function addTask()
     {
         $query = "INSERT INTO interventions (nom_intervention, date_intervention, etage_intervention) VALUES (?, ?, ?)";
-        $stmt = $this->connectToDatabase()->prepare($query);
+        $stmt = connectToDatabase()->prepare($query);
         $params = [$this->taskName, $this->taskDate, $this->taskFloor];
         $stmt->execute($params);
         echo "<script>window.location='index.php'</script>";
