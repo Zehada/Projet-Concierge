@@ -41,13 +41,37 @@ require('functions.php');
         $newTask = new Task($_GET['task-done'], $_GET['task-date'], $_GET['task-floor']);
         $newTask->addTask();
     }
+
+    $displayTasksByFloor = getFloor();
     ?>
+    <form class="mx-5">
+        <select id="select-by-floor" class="form-select mb-3" name="floor-selected">
+            <option selected>Sélectionner par étage</option>
+            <?php
+            foreach ($displayTasksByFloor as $task) {
+
+                echo '<option>' . $task['etage_intervention'] . '</option>';
+            }
+            ?>
+        </select>
+        <button class="btn btn-primary" type="submit" name="rechercher">Rechercher</button>
+    </form>
 
 
     <div class="d-flex flex-wrap m-5">
 
         <?php
-        $displayTasks = getTasks();
+
+
+        if (isset($_GET['rechercher'])) {
+            $displayTasks = getTasksByFloor();
+            if ($_GET['floor-selected'] == "Sélectionner par étage") {
+                $displayTasks = getTasks();
+            }
+        } else {
+            $displayTasks = getTasks();
+        }
+
 
         foreach ($displayTasks as $task) {
 

@@ -21,13 +21,30 @@ function connectToDatabase()
 
 function getTasks()
 {
-    $query = "SELECT * FROM interventions";
+    $query = "SELECT * FROM interventions ORDER BY date_intervention";
     $stmt = connectToDatabase()->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll();
     return $result;
 }
 
-function deleteTask()
+function getFloor()
 {
+    $query = "SELECT DISTINCT etage_intervention FROM interventions ORDER BY etage_intervention";
+    $stmt = connectToDatabase()->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+    return $result;
+}
+
+function getTasksByFloor()
+{
+    $query = "SELECT * FROM interventions WHERE etage_intervention = :etage_intervention";
+    $stmt = connectToDatabase()->prepare($query);
+    $stmt->execute([
+        'etage_intervention' => $_GET['floor-selected'],
+    ]);
+
+    $result = $stmt->fetchAll();
+    return $result;
 }
