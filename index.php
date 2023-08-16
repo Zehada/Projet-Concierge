@@ -43,6 +43,7 @@ require('functions.php');
     }
 
     $displayTasksByFloor = getFloor();
+    $displayTasksByDate = getDatee();
     ?>
     <form class="mx-5">
         <select id="select-by-floor" class="form-select mb-3" name="floor-selected">
@@ -51,6 +52,15 @@ require('functions.php');
             foreach ($displayTasksByFloor as $task) {
 
                 echo '<option>' . $task['etage_intervention'] . '</option>';
+            }
+            ?>
+        </select>
+        <select id="select-by-date" class="form-select mb-3" name="date-selected">
+            <option selected>Sélectionner par date</option>
+            <?php
+            foreach ($displayTasksByDate as $date) {
+
+                echo '<option>' . $date['date_intervention'] . '</option>';
             }
             ?>
         </select>
@@ -64,9 +74,25 @@ require('functions.php');
 
 
         if (isset($_GET['rechercher'])) {
-            $displayTasks = getTasksByFloor();
-            if ($_GET['floor-selected'] == "Sélectionner par étage") {
+
+            if ($_GET['floor-selected'] !== "Sélectionner par étage" && $_GET['date-selected'] == "Sélectionner par date") {
+                $displayTasks = getTasksByFloor();
+                if ($_GET['floor-selected'] == "Sélectionner par étage") {
+                    $displayTasks = getTasks();
+                }
+            } else if ($_GET['date-selected'] !== "Sélectionner par date" && $_GET['floor-selected'] == "Sélectionner par étage") {
+                $displayTasks = getTasksByDate();
+                if ($_GET['date-selected'] == "Sélectionner par date") {
+                    $displayTasks = getTasks();
+                }
+            } else if ($_GET['date-selected'] == "Sélectionner par date" && $_GET['floor-selected'] == "Sélectionner par étage") {
                 $displayTasks = getTasks();
+            } else  if ($_GET['date-selected'] !== "Sélectionner par date" && $_GET['floor-selected'] !== "Sélectionner par étage") {
+
+                $displayTasks = getTasksByAll();
+                if (empty($displayTasks)) {
+                    echo "Rien à afficher";
+                }
             }
         } else {
             $displayTasks = getTasks();

@@ -48,3 +48,37 @@ function getTasksByFloor()
     $result = $stmt->fetchAll();
     return $result;
 }
+
+function getDatee()
+{
+    $query = "SELECT DISTINCT date_intervention FROM interventions ORDER BY date_intervention";
+    $stmt = connectToDatabase()->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+    return $result;
+}
+
+function getTasksByDate()
+{
+    $query = "SELECT * FROM interventions WHERE date_intervention = :date_intervention";
+    $stmt = connectToDatabase()->prepare($query);
+    $stmt->execute([
+        'date_intervention' => $_GET['date-selected'],
+    ]);
+
+    $result = $stmt->fetchAll();
+    return $result;
+}
+
+function getTasksByAll()
+{
+    $query = "SELECT * FROM interventions WHERE date_intervention = :date_intervention AND etage_intervention = :etage_intervention";
+    $stmt = connectToDatabase()->prepare($query);
+    $stmt->execute([
+        'date_intervention' => $_GET['date-selected'],
+        'etage_intervention' => $_GET['floor-selected'],
+    ]);
+
+    $result = $stmt->fetchAll();
+    return $result;
+}
