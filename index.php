@@ -51,7 +51,11 @@ require('functions.php');
             <?php
             foreach ($displayTasksByFloor as $task) {
 
-                echo '<option>' . $task['etage_intervention'] . '</option>';
+                if (isset($_GET['floor-selected']) && $_GET['floor-selected'] == $task['etage_intervention']) {
+                    echo '<option selected>' . $task['etage_intervention'] . '</option>';
+                } else {
+                    echo '<option>' . $task['etage_intervention'] . '</option>';
+                }
             }
             ?>
         </select>
@@ -59,8 +63,11 @@ require('functions.php');
             <option selected>Sélectionner par date</option>
             <?php
             foreach ($displayTasksByDate as $date) {
-
-                echo '<option>' . $date['date_intervention'] . '</option>';
+                if (isset($_GET['date-selected']) && $_GET['date-selected'] == $date['date_intervention']) {
+                    echo '<option selected>' . $date['date_intervention'] . '</option>';
+                } else {
+                    echo '<option>' . $date['date_intervention'] . '</option>';
+                }
             }
             ?>
         </select>
@@ -72,6 +79,10 @@ require('functions.php');
 
         <?php
 
+
+        // if ($_SERVER['REQUEST_URI'] === '/projet-Menard/index.php') {
+        //     $displayTasks = getTasks();
+        // }
 
         if (isset($_GET['rechercher'])) {
 
@@ -97,6 +108,7 @@ require('functions.php');
         } else {
             $displayTasks = getTasks();
         }
+
 
 
         foreach ($displayTasks as $task) {
